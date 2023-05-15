@@ -3,6 +3,14 @@ all:
     192.168.155.40 :
     10.7.99.2 :
  
+root:
+  hosts :
+    10.7.99.2 :
+  vars :
+    ansible_connection: ssh 
+    ansible_ssh_user: root
+    ansible_password: Crypteo81
+
 routers:
   hosts :
     192.168.155.40 :
