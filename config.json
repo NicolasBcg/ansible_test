@@ -24,6 +24,7 @@
  	"port": "",
  	"interface": "",
  	"tmp_path": "/tmp/semaphore",
+        "remote_tmp": "/tmp/semaphore",
  	"cookie_hash": "qXJaEjvTTokTQ57eDpgnYAUEv5lZh6l429UhcMj5aQw=",
  	"cookie_encryption": "tLdRxw2i3PrDf2HdWfHUSUJ1kpml+U11lxGnYJECufs=",
  	"access_key_encryption": "zk6rBdGUna2mJBLqZq5Qpjx7o7GVBEz+zXY41DI6HoI=",
