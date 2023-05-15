@@ -1,9 +1,8 @@
-- name: Export
-  ansible.builtin.shell: >-
-    sshpass -p '{{ ansible_password }}' ssh -o StrictHostKeyChecking=no {{ ansible_user }}@{{ inventory_hostname }} /export        
-  register: export
-  delegate_to: 127.0.0.1 
+- name: run the command 'export'
+  routeros_command:
+    commands: /export
+  register: output1
 
 - name: print result
   debug:
-    var: export.stdout_lines
+    var: output1.stdout_lines
