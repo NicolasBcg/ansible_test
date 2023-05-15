@@ -4,9 +4,8 @@
   register: output1
 
 - name: Backup
-  ansible.builtin.copy:
-    content: "{{ output1.stdout }}"
-    dest: "{{ backup_dir }}/{{ inventory_hostname }}_config.{{ lookup('pipe', 'date +%Y-%m-%d@%H:%M:%S') }}"
+  ansible.builtin.shell: >-
+    echo {{ output1.stdout_lines }} >> "{{ backup_dir }}/{{ inventory_hostname }}_config.{{ lookup('pipe', 'date +%Y-%m-%d@%H:%M:%S') }}"
   when: output1
   delegate_to: 127.0.0.1
 
