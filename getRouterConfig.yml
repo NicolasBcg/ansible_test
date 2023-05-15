@@ -11,4 +11,12 @@
   - name: Print message
     ansible.builtin.debug:
       msg: Hello world
-  
+
+  - name: run the command 'ip route print'
+    routeros_command:
+      commands: /ip route print
+    register: output1
+
+  - name: print result
+    debug:
+       var: output1.stdout_lines  
