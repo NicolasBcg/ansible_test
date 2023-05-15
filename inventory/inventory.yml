@@ -1,0 +1,21 @@
+all:
+  hosts :
+    192.168.155.40 :
+    10.7.99.2 :
+ 
+routers:
+  hosts :
+    192.168.155.40 :
+  vars :
+    ansible_connection: ansible.netcommon.network_cli
+    ansible_network_os: community.routeros.routeros
+    ansible_password: Crypteo81
+    ansible_user: admin
+
+self:
+  hosts :
+    10.7.99.2 :
+  vars:
+    ansible_password: Crypteo81
+    ansible_user: root
+

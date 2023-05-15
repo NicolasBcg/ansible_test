@@ -1,0 +1,25 @@
+---
+- name: Push Backup Mikrotik
+  hosts: routers
+  gather_facts: false
+
+  vars:
+    backup_dir: "/home/ansible/backups"
+    fileName: "{{ inventory_hostname }}_config.2023-05-12@12:10:05"
+
+  tasks:
+    - name: getFile
+      ansible.builtin.shell:
+        cat {{backup_dir}}/{{fileName}}
+      register: backfileContent
+      delegate_to: localhost
+
+    - name: createFile
+      routeros_command:
+        commands: /file print file=test.txt
+
+    - name: setFile
+      routeros_command:
+        commands: /file set test.txt contents={{ backfileContent.stdout }}
+      vars:
+        ansible_command_timeout: 60      

@@ -1,0 +1,20 @@
+---
+
+- name: Network Infos 
+  connection: ansible.netcommon.network_cli
+  gather_facts: false
+  hosts: routers
+  become: true
+  become_method: enable
+
+  tasks:
+  - name: Print message
+    ansible.builtin.debug:
+      msg: Hello world
+  
+  - name: Get config for routerOs devices
+    community.routeros.facts:
+      gather_subset: all
+  - name: Display the config
+    debug:
+      msg: "The hostname is {{ ansible_net_hostnam }} and the OS is {{ ansible_net_version }}" 
