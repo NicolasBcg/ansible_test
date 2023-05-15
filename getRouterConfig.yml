@@ -11,6 +11,7 @@
   - name: Print message
     ansible.builtin.debug:
       msg: Hello world
+    delegate_to: 127.0.0.1
 
   - name: run the command 'ip route print'
     routeros_command:
