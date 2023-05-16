@@ -5,10 +5,7 @@
 
 - name: Backup
   ansible.builtin.shell: >-
-    python3 write.py "{{ backup_dir }}/{{ inventory_hostname }}_config.{{ lookup('pipe', 'date +%Y-%m-%d@%H:%M:%S') }}" {{ output1.stdout }}  
+    echo  {{ output1.stdout }} > "{{ backup_dir }}/{{ inventory_hostname }}_config.{{ lookup('pipe', 'date +%Y-%m-%d@%H:%M:%S') }}"
   when: output1
   delegate_to: 127.0.0.1
 
-- name: print result
-  debug:
-    var: output1.stdout_lines

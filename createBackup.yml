@@ -1,6 +1,6 @@
 ---
 - name: Backup Mikrotik
-  hosts: routers
+  hosts: mikrotiks
   gather_facts: false
 
   roles:

@@ -1,0 +1,51 @@
+---
+- name: get Version and update
+  connection: ansible.netcommon.network_cli
+  gather_facts: true
+  hosts: mikrotiks
+
+  tasks:
+    - name: Get version
+      community.routeros.facts:
+     
+    - name: Display version
+      ansible.builtin.debug:
+        msg: "{{ inventory_hostname }} possede la version {{ ansible_net_version }}"
+      delegate_to: 127.0.0.1    
+
+    - name: Save Version
+      ansible.builtin.shell: >-
+        echo "routeur {{ inventory_hostname }} ; version  {{ ansible_net_version }}" >> "versions{{ lookup('pipe', 'date +%Y-%m-%d@%H') }}.txt"
+      delegate_to: 127.0.0.1
+      when: ansible_net_version.find('6.40') == -1
+
+    - name: Update Version
+      ansible.builtin.debug:
+        msg: "{{ inventory_hostname }} possede la version 6.40, updating..."
+      delegate_to: 127.0.0.1
+      when: ansible_net_version.find('6.40') != -1
+    
+    - name: Run package updates and reboot if needed
+      when: ansible_net_version.find('6.40') != -1
+      routeros_command:
+        commands: /system package update download
+
+
+    - name: install packages
+      when : ansible_net_version.find('6.40') != -1
+      routeros_command:
+        commands: /system package update install      
+      register: result
+
+    - name: reboot
+      when : ansible_net_version.find('6.40') != -1
+      routeros_command:
+        commands: /system reboot
+      delay: 60
+      ignore_errors: True
+
+    - name: Save new Version
+      ansible.builtin.shell: >-
+        echo "{{ inventory_hostname }} etait {{ ansible_net_version }}", UPDATED >> "versions{{ lookup('pipe', 'date +%Y-%m-%d@%H') }}.txt"
+      delegate_to: 127.0.0.1
+      when: ansible_net_version.find('6.40') != -1
