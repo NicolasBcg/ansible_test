@@ -4,7 +4,7 @@ def main(model,nom,date,config):
     path="backupsMicrotiks"
     if os.path.exists(path) == False:
         os.mkdir(path)
-    path+=model
+    path+="/"+model
     if os.path.exists(path) == False:
         os.mkdir(path)
 
