@@ -1,5 +1,0 @@
-all:
-  hosts:
-    ansible_user=root : 
-    ansible_password=Crypteo81 :
-
