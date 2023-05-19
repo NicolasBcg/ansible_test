@@ -1,12 +1,12 @@
 import sys
 import os
 def main(model,nom,date,config):
-    path="/home/ansible/backupsMicrotiks"
+    path="backupsMicrotiks"
     if os.path.exists(path) == False:
-        os.mkdir(path, mode=0o777)
+        os.mkdir(path)
     path+=model
     if os.path.exists(path) == False:
-        os.mkdir(path, mode=0o777)
+        os.mkdir(path)
 
     filename=path+"/"+nom+date+".cfg"
     fichier = open(filename, "w")
