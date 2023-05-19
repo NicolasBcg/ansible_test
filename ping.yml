@@ -1,15 +1,14 @@
 ---
 - name: Ping
   vars:
-    vartest: "success" 
-  gather_facts: False 
+    vartest: "success"
+  gather_facts: False
   hosts: mikrotiks
 
   tasks:
     - name: Check if reacheable
-      ansible.builtin.shell: >-
-        ping -c 5 {{  inventory_hostname }}
-      delegate_to: 127.0.0.1
+      shell: ping -c 5 {{  inventory_hostname }}
+      delegate_to: localhost
       ignore_errors: true
       register: pingResult
 
