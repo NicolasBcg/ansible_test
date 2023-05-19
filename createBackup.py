@@ -1,7 +1,7 @@
 import sys
 import os
 def main(model,nom,date,config):
-    path="/home/ansible/backupsMicrotiks/"+model
+    path="backupsMicrotiks/"+model
     if os.path.exists(path) == False:
         os.mkdir(path)
 
