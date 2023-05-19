@@ -15,7 +15,7 @@
 
     - name: Save Version
       ansible.builtin.shell: >-
-        echo "routeur {{ inventory_hostname }} ; version  {{ ansible_net_version }}" >> "versions{{ lookup('pipe', 'date +%Y-%m-%d@%H') }}.txt"
+        echo "routeur {{ inventory_hostname }} ; version  {{ ansible_net_version }}" >> "versions/versions{{ lookup('pipe', 'date +%Y-%m-%d') }}.txt"
       delegate_to: 127.0.0.1
       when: ansible_net_version.find('6.40') == -1
 

@@ -1,11 +1,28 @@
-- name: run the command 'export'
+- name: Check if reacheable
+  ansible.builtin.shell: >-
+    ping -c 3 {{  inventory_hostname }}
+  delegate_to: 127.0.0.1
+  ignore_errors: true
+  register: pingResult
+
+- name: Recupere model et nom
+  community.routeros.facts:
+  when: pingResult.stdout.find(' 100% packet loss') == -1
+
+- name: Display infos
+  ansible.builtin.debug:
+    msg: "{{ inventory_hostname }} a pour model {{ ansible_net_model }} et pour nom {{ ansible_net_hostname }}: "
+  delegate_to: 127.0.0.1
+  when: pingResult.stdout.find(' 100% packet loss') == -1
+
+- name: Recupere le fichier de backup
   routeros_command:
     commands: /export
-  register: output1
+  register: config
+  when: pingResult.stdout.find(' 100% packet loss') == -1
 
-- name: Backup
+- name: Enregistre le fichier de backup
   ansible.builtin.shell: >-
-    echo  {{ output1.stdout }} > "{{ backup_dir }}/{{ inventory_hostname }}_config.{{ lookup('pipe', 'date +%Y-%m-%d@%H:%M:%S') }}"
-  when: output1
+    python3 createBackup.py {{ ansible_net_model }} {{ ansible_net_hostname }} {{ lookup('pipe', 'date +%Y-%m-%d') }} {{ config.stdout }}
   delegate_to: 127.0.0.1
-
+  when: pingResult.stdout.find(' 100% packet loss') == -1

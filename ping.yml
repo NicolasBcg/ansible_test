@@ -1,0 +1,26 @@
+---
+- name: Ping
+  vars:
+    vartest: "success" 
+  gather_facts: False 
+  hosts: mikrotiks
+
+  tasks:
+    - name: Check if reacheable
+      ansible.builtin.shell: >-
+        ping -c 5 {{  inventory_hostname }}
+      delegate_to: 127.0.0.1
+      ignore_errors: true
+      register: pingResult
+
+    - name: Display ping res
+      ansible.builtin.debug:
+        msg: "{{ vartest }}"
+      delegate_to: 127.0.0.1
+      when: pingResult.stdout.find(' 100% packet loss') == -1
+
+    - name: Display ping res
+      ansible.builtin.debug:
+        msg: "{{ inventory_hostname }} unreacheable"
+      delegate_to: 127.0.0.1
+      when: pingResult.stdout.find(' 100% packet loss') != -1
