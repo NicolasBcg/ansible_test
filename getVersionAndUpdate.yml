@@ -20,7 +20,7 @@
       when: pingResult.stdout.find(' 100% packet loss') == -1
 
     - name: Save Version
-      local_action: ansible.builtin.command echo routeur {{ inventory_hostname }} ; version {{ ansible_net_version }} >> /home/ansible/versions/versions{{ lookup('pipe', 'date +%Y-%m-%d@%H') }}.txt
+      local_action: shell echo "routeur {{ inventory_hostname }} ; version {{ ansible_net_version }}" >> /home/ansible/versions/versions{{ lookup('pipe', 'date +%Y-%m-%d@%H') }}.txt
       when: ansible_net_version.find('6.40') == -1
 
     - name: Update Version
