@@ -1,24 +1,28 @@
 ---
 - name: get Version and update
   connection: ansible.netcommon.network_cli
-  gather_facts: true
+  gather_facts: true   
   hosts: mikrotiks
 
   tasks:
     - name: Check if reacheable
-      local_action: ansible.builtin.command ping -c 5 {{  inventory_hostname }}
+      local_action: ansible.builtin.command ping -c 3 {{  inventory_hostname }}
       ignore_errors: true
       register: pingResult
 
     - name: Get version
       community.routeros.facts:
-      when: pingResult.stdout.find(' 100% packet loss') == -1
+      when: pingResult.stdout.find(' 100% packet loss') == -1   
 
     - name: Display version
       ansible.builtin.debug:
         msg: "{{ inventory_hostname }} possede la version {{ ansible_net_version }}"
       when: pingResult.stdout.find(' 100% packet loss') == -1
 
+    - name: Unreachable
+      local_action: shell echo "routeur {{ inventory_hostname }} unreachable" >> /home/ansible/versions/versions{{ lookup('pipe', 'date +%Y-%m-%d') }}.txt
+      when: pingResult.stdout.find(' 100% packet loss') != -1
+     
     - name: Save Version
       local_action: shell echo "routeur {{ inventory_hostname }} ; version {{ ansible_net_version }}" >> /home/ansible/versions/versions{{ lookup('pipe', 'date +%Y-%m-%d@%H') }}.txt
       when: ansible_net_version.find('6.40') == -1
@@ -33,7 +37,6 @@
       routeros_command:
         commands: /system package update download
 
-
     - name: install packages
       when : ansible_net_version.find('6.40') != -1
       routeros_command:
@@ -45,7 +48,6 @@
       routeros_command:
         commands: /system reboot
       delay: 60
-      ignore_errors: True
 
     - name: Save new Version
       local_action: ansible.builtin.command echo "{{ inventory_hostname }} etait {{ ansible_net_version }}", UPDATED >> "/home/ansible/versions/versions{{ lookup('pipe', 'date +%Y-%m-%d@%H') }}.txt"
