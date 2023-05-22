@@ -1,6 +1,5 @@
 - name: Check if reacheable
-  ansible.builtin.shell: >-
-    ping -c 3 {{  inventory_hostname }}
+  local_action: ansible.builtin.command ping -c 3 {{  inventory_hostname }}
   delegate_to: 127.0.0.1
   ignore_errors: true
   register: pingResult

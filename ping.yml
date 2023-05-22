@@ -7,7 +7,6 @@
 
   tasks:
     - name: Check if reacheable
-      # shell: ping -c 5 {{  inventory_hostname }}
       local_action: ansible.builtin.command ping -c 5 {{  inventory_hostname }}
       ignore_errors: true
       register: pingResult
