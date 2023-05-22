@@ -19,5 +19,5 @@
   when: pingResult.stdout.find(' 100% packet loss') == -1
 
 - name: Enregistre le fichier de backup
-  local_action: command python3 createBackup.py {{ ansible_net_model }} {{ ansible_net_hostname }} {{ lookup('pipe', 'date +%Y-%m-%d') }} {{ config.stdout }}
+  local_action: command python3 /home/ansible/createBackup.py {{ ansible_net_model }} {{ ansible_net_hostname }} {{ lookup('pipe', 'date +%Y-%m-%d') }} {{ config.stdout }}
   when: pingResult.stdout.find(' 100% packet loss') == -1
