@@ -1,6 +1,5 @@
 - name: Check if reacheable
   local_action: ansible.builtin.command ping -c 3 {{  inventory_hostname }}
-  delegate_to: 127.0.0.1
   ignore_errors: true
   register: pingResult
 
@@ -11,7 +10,6 @@
 - name: Display infos
   ansible.builtin.debug:
     msg: "{{ inventory_hostname }} a pour model {{ ansible_net_model }} et pour nom {{ ansible_net_hostname }}: "
-  delegate_to: 127.0.0.1
   when: pingResult.stdout.find(' 100% packet loss') == -1
 
 - name: Recupere le fichier de backup
@@ -21,7 +19,5 @@
   when: pingResult.stdout.find(' 100% packet loss') == -1
 
 - name: Enregistre le fichier de backup
-  ansible.builtin.shell: >-
-    python3 createBackup.py {{ ansible_net_model }} {{ ansible_net_hostname }} {{ lookup('pipe', 'date +%Y-%m-%d') }} {{ config.stdout }}
-  delegate_to: 127.0.0.1
+  local_action: python3 createBackup.py {{ ansible_net_model }} {{ ansible_net_hostname }} {{ lookup('pipe', 'date +%Y-%m-%d') }} {{ config.stdout }}
   when: pingResult.stdout.find(' 100% packet loss') == -1
