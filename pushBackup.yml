@@ -1,0 +1,42 @@
+---
+- name: pushBackup
+  connection: ansible.netcommon.network_cli
+  gather_facts: true
+  hosts: mikrotiks
+  vars:
+    date: "2023-05-24"
+  tasks:
+    - name: Check if reacheable
+      local_action: ansible.builtin.command ping -c 3 {{  inventory_hostname }}
+      ignore_errors: true
+      register: pingResult
+
+    - name: Recupere model et nom
+      community.routeros.facts:
+      when: pingResult.stdout.find(' 100% packet loss') == -1
+
+    - name: rename backup
+      when : pingResult.stdout.find(' 100% packet loss') == -1
+      local_action: shell cp /home/ansible/backupsMicrotiks/{{ ansible_net_model }}/{{ ansible_net_hostname }}{{ date }}.txt /home/ansible/backupsMicrotiks/bkp.rsc
+
+    - name: forgetting known_hostssh
+      when : pingResult.stdout.find(' 100% packet loss') == -1
+      local_action: shell ssh-keygen -f "/root/.ssh/known_hosts" -R "{{  inventory_hostname }}" 
+
+    - name: loadBackup
+      when : pingResult.stdout.find(' 100% packet loss') == -1
+      local_action: shell sshpass -p {{ ansible_password }} scp -o StrictHostKeyChecking=no /home/ansible/backupsMicrotiks/bkp.rsc {{ ansible_user }}@{{  inventory_hostname }}:/
+      
+    - name: load script for backup
+      when : pingResult.stdout.find(' 100% packet loss') == -1
+      local_action: shell sshpass -p {{ ansible_password }} scp -o StrictHostKeyChecking=no /home/ansible/scripts/scriptBackup.rsc {{ ansible_user }}@{{  inventory_hostname }}:/
+
+    - name: push backup and reboot
+      when : pingResult.stdout.find(' 100% packet loss') == -1
+      routeros_command:
+        commands: /import scriptBackup.rsc
+
+    - name: erase temp file
+      when : pingResult.stdout.find(' 100% packet loss') == -1
+      local_action: shell rm /home/ansible/backupsMicrotiks/bkp.rsc
+

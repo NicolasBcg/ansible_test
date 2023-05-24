@@ -1,5 +1,5 @@
 
-uis=["o","oui","y","yes","uoi","ou","ui","eys","yse"]#liste d'entrees utilisateurs etants considerees comme etant "oui"
+ouis=["o","oui","y","yes","uoi","ou","ui","eys","yse"]#liste d'entrees utilisateurs etants considerees comme etant "oui"
 def main():
     vars=["ansible_connection","ansible_network_os","ansible_user","ansible_password"]
     varsUsed=[]
@@ -35,7 +35,7 @@ def main():
             
 
     
-    yaml_file = open(input("nom sous lequel enregistrer l'inventaire : ")+".yml", 'w')
+    yaml_file = open("/home/ansible/inventory/"+input("nom sous lequel enregistrer l'inventaire : ")+".yml", 'w')
     yaml_file.write(inventory)
     yaml_file.close()
 
@@ -51,3 +51,4 @@ def varsAsignation(selectedvar):
 
 if __name__ == "__main__":
     main()
+
